@@ -15,9 +15,9 @@
       class="composer__textarea"
       rows="1"
       placeholder="Ask about a condition, symptom, or treatment…"
-      [(ngModel)]="value"
+      [ngModel]="value()"
+      (ngModelChange)="onModelChange($event)"
       name="message"
-      (input)="autoGrow()"
       (keydown)="onKeydown($event)"
     ></textarea>
 
@@ -28,7 +28,7 @@
         </svg>
       </button>
     } @else {
-      <button type="submit" class="composer__action composer__action--send" [disabled]="disabled() || !value.trim()">
+      <button type="submit" class="composer__action composer__action--send" [disabled]="disabled() || !value().trim()">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path d="M2 8h11M8.5 3.5L13 8l-4.5 4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
         </svg>

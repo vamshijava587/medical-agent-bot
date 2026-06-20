@@ -1,9 +1,11 @@
 .chat-window {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
 
 .chat-window__list {
@@ -14,6 +16,7 @@
   padding: 28px 24px 12px;
   max-width: var(--shell-max);
   width: 100%;
+  min-width: 0;
   margin: 0 auto;
 
   @media (min-width: 720px) {

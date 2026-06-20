@@ -2,8 +2,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  afterNextRender,
+  effect,
   input,
   output,
+  signal,
   viewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -22,7 +25,12 @@ export class ChatInput {
   readonly send = output<string>();
   readonly stop = output<void>();
 
-  protected value = '';
+  // Signal instead of a plain field: in zoneless mode, reading a signal
+  // inside the autoGrow effect is what makes the resize re-run reliably
+  // every time the text changes, instead of depending on manually timed
+  // DOM reads after change detection (which is what was causing the
+  // textarea to resize a tick late / not at all).
+  protected readonly value = signal('');
 
   private readonly textarea = viewChild<ElementRef<HTMLTextAreaElement>>('textarea');
 
@@ -34,6 +42,22 @@ export class ChatInput {
   ];
 
   readonly quickPrompts = ChatInput.QUICK_PROMPTS;
+
+  constructor() {
+    // Runs after every render where `value()` changed, once the textarea's
+    // new content is actually in the DOM — so scrollHeight is measured
+    // correctly instead of one render behind.
+    afterNextRender(() => this.autoGrow());
+
+    effect(() => {
+      this.value();
+      afterNextRender(() => this.autoGrow());
+    });
+  }
+
+  onModelChange(next: string): void {
+    this.value.set(next);
+  }
 
   onSubmit(event: Event): void {
     event.preventDefault();
@@ -48,7 +72,7 @@ export class ChatInput {
   }
 
   useQuickPrompt(prompt: string): void {
-    this.value = prompt;
+    this.value.set(prompt);
     this.trySend();
   }
 
@@ -60,10 +84,9 @@ export class ChatInput {
   }
 
   private trySend(): void {
-    const trimmed = this.value.trim();
+    const trimmed = this.value().trim();
     if (!trimmed || this.disabled()) return;
     this.send.emit(trimmed);
-    this.value = '';
-    queueMicrotask(() => this.autoGrow());
+    this.value.set('');
   }
 }

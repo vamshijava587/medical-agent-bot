@@ -1,7 +1,21 @@
+:host {
+  display: flex;
+  width: 100%;
+}
+
+:host:has(.bubble--user) {
+  justify-content: flex-end;
+}
+
+:host:has(.bubble--assistant) {
+  justify-content: flex-start;
+}
+
 .bubble {
   display: flex;
   gap: 12px;
   max-width: 720px;
+  width: 100%;
   animation: bubble-in 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
