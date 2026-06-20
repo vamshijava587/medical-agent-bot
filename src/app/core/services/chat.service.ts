@@ -7,6 +7,8 @@ export interface StreamHandlers {
   onError: (message: string) => void;
 }
 
+export type ModelType = 'OPENAI' | 'OLLAMA';
+
 /**
  * Talks to the Spring AI backend's /chat endpoint.
  *
@@ -29,7 +31,7 @@ export class ChatService {
 
   private activeController: AbortController | null = null;
 
-  send(message: string, handlers: StreamHandlers): void {
+  send(message: string, handlers: StreamHandlers, model: ModelType = 'OPENAI'): void {
     this.activeController = new AbortController();
 
     fetch(`${environment.apiBaseUrl}/chat`, {
@@ -37,6 +39,7 @@ export class ChatService {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'text/event-stream',
+        'X-Chat-Model': model,
       },
       body: JSON.stringify({ message }),
       signal: this.activeController.signal,

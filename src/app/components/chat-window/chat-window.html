@@ -1,4 +1,4 @@
-<div class="chat-window" #chatWindow (scroll)="onScroll()">
+<div class="chat-window" #chatWindow (scroll)="onScroll()" [class.open]="open()">
   @if (messages().length === 0) {
     <app-welcome-screen (promptSelected)="promptSelected.emit($event)" />
   } @else {
@@ -23,3 +23,14 @@
     }
   }
 </div>
+
+<button
+  class="chat-toggle"
+  type="button"
+  aria-label="Open chat"
+  (click)="toggle()"
+>
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+</button>

@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiBaseUrl: 'https://medical-agent-bot-bff.onrender.com',
+  apiBaseUrl: 'http://localhost:8080',
 };

@@ -13,7 +13,11 @@ import { renderLiteMarkdown } from '../../core/utils/markdown-lite';
 export class MessageBubble {
   readonly message = input.required<ChatMessage>();
 
-  private readonly sanitizer = inject(DomSanitizer);
+  private readonly sanitizer: DomSanitizer;
+
+  constructor() {
+    this.sanitizer = inject(DomSanitizer);
+  }
 
   readonly renderedContent = computed<string | SafeHtml>(() => {
     const msg = this.message();

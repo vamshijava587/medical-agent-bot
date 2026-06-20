@@ -19,17 +19,40 @@ function createId(): string {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
-  private readonly chat = inject(ChatService);
-  protected readonly store = inject(SessionStore);
+  private readonly chat: ChatService;
+  protected readonly store: SessionStore;
 
   protected readonly sidebarCollapsed = signal(false);
   protected readonly isStreaming = signal(false);
 
-  protected readonly connected = this.chat.connected;
+  protected readonly connected: any;
+  protected readonly activeSessionTitle: any;
 
-  protected readonly activeSessionTitle = computed(
-    () => this.store.activeSession()?.title ?? 'New consultation',
-  );
+  private readonly resizeHandler: () => void;
+
+  constructor() {
+    this.chat = inject(ChatService);
+    this.store = inject(SessionStore);
+
+    this.connected = this.chat.connected;
+    this.activeSessionTitle = computed(
+      () => this.store.activeSession()?.title ?? 'New consultation',
+    );
+
+    // keep sidebar collapsed on small screens by default
+    this.resizeHandler = () => {
+      const isSmall = window.innerWidth <= 880;
+      this.sidebarCollapsed.set(isSmall);
+    };
+
+    // set initial state and listen for changes so layout adapts responsively
+    this.resizeHandler();
+    window.addEventListener('resize', this.resizeHandler);
+  }
+
+  ngOnDestroy(): void {
+    window.removeEventListener('resize', this.resizeHandler);
+  }
 
   toggleSidebar(): void {
     this.sidebarCollapsed.update((v) => !v);
@@ -41,6 +64,8 @@ export class App {
 
   onSelectSession(id: string): void {
     this.store.selectSession(id);
+    // On small screens, hide the sidebar after the user selects a session
+    if (window.innerWidth <= 880) this.sidebarCollapsed.set(true);
   }
 
   onDeleteSession(id: string): void {
