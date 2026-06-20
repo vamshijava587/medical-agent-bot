@@ -31,8 +31,17 @@ export function renderLiteMarkdown(raw: string): string {
  */
 function normalizeStructure(text: string): string {
   return text
+    // restore missing space after a period followed by a capital letter
     .replace(/([a-z0-9)])\.(?=[A-Z])/g, '$1. ')
-    .replace(/(?<=[:.]\s?)(\d{1,2}[.)]\s+)/g, '\n$1')
+    // if a numbered marker appears immediately after punctuation (colon/period), push it to a new line
+    .replace(/(?<=[:.]\s?)(\d{1,2}[.)]\s*)/g, '\n$1')
+    // if a numbered marker is directly appended to a word (e.g. "Fever2. Chills"), insert a newline
+    .replace(/([a-zA-Z0-9])(\d{1,2}[.)]\s*)/g, '$1\n$2')
+    // ensure a trailing 'Note', 'NOTE', or variants attached to the previous line
+    // (e.g. "...children)Note:", "...children)NOTE -", "...children)Note —")
+    // become their own paragraph by inserting a blank line before them.
+    .replace(/([^\n\s])(?=\bNote\b\s*(?:[:\u2014\u2013-]|$))/gi, '$1\n\n')
+    // collapse excessive blank lines
     .replace(/\n{3,}/g, '\n\n');
 }
 
