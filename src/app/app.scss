@@ -49,3 +49,10 @@
     color: var(--teal);
   }
 }
+
+/* Make the vitals host expand to fill the header area so the trace and status can align edge-to-edge */
+.shell__vitals {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: block;
+}

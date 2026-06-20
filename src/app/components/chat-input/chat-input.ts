@@ -5,6 +5,8 @@ import {
   afterNextRender,
   effect,
   input,
+  Injector,
+  inject,
   output,
   signal,
   viewChild,
@@ -44,14 +46,17 @@ export class ChatInput {
   readonly quickPrompts = ChatInput.QUICK_PROMPTS;
 
   constructor() {
-    // Runs after every render where `value()` changed, once the textarea's
-    // new content is actually in the DOM — so scrollHeight is measured
-    // correctly instead of one render behind.
-    afterNextRender(() => this.autoGrow());
+    // Capture an injector instance and pass it to afterNextRender so the
+    // callback runs with a valid injection context even when scheduled from
+    // an effect.
+    const inj = inject(Injector);
+
+    // Runs after the next render to ensure the textarea is in the DOM.
+    afterNextRender(() => this.autoGrow(), { injector: inj });
 
     effect(() => {
       this.value();
-      afterNextRender(() => this.autoGrow());
+      afterNextRender(() => this.autoGrow(), { injector: inj });
     });
   }
 
