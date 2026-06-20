@@ -1,0 +1,12 @@
+<div class="chat-window">
+  @if (messages().length === 0) {
+    <app-welcome-screen (promptSelected)="promptSelected.emit($event)" />
+  } @else {
+    <div class="chat-window__list">
+      @for (message of messages(); track message.id) {
+        <app-message-bubble [message]="message" />
+      }
+      <div #scrollAnchor class="chat-window__anchor"></div>
+    </div>
+  }
+</div>

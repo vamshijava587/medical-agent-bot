@@ -1,0 +1,119 @@
+@use 'sass:color';
+
+// ---------------------------------------------------------------------------
+// MedAI design tokens — dark futuristic / glassmorphism medical-tech theme
+// ---------------------------------------------------------------------------
+:root {
+  // Surfaces
+  --void: #05080f;
+  --panel: #0b1220;
+  --panel-raised: #101a2c;
+  --hairline: #1a2333;
+  --hairline-bright: #283656;
+
+  // Signature accents
+  --teal: #00e5c7;
+  --teal-dim: #00e5c733;
+  --violet: #6e5bff;
+  --violet-dim: #6e5bff33;
+  --danger: #ff5d7a;
+
+  // Text
+  --ink: #e8eef7;
+  --ink-soft: #9fb0c9;
+  --ink-faint: #5c6b85;
+
+  // Type
+  --font-display: 'Space Grotesk', 'Inter', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+
+  // Layout
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --shell-max: 1400px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--void);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+// Ambient backdrop: soft radial glows, no busy texture.
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 12% 8%, var(--teal-dim), transparent 38%),
+    radial-gradient(circle at 88% 92%, var(--violet-dim), transparent 42%);
+  pointer-events: none;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+p {
+  margin: 0;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+::selection {
+  background: var(--teal-dim);
+}
+
+// Slim, unobtrusive scrollbars matching the dark theme.
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--hairline-bright) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--hairline-bright);
+  border-radius: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

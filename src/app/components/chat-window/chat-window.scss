@@ -1,0 +1,27 @@
+.chat-window {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  scroll-behavior: smooth;
+}
+
+.chat-window__list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 28px 24px 12px;
+  max-width: var(--shell-max);
+  width: 100%;
+  margin: 0 auto;
+
+  @media (min-width: 720px) {
+    padding: 32px 48px 12px;
+  }
+}
+
+.chat-window__anchor {
+  height: 1px;
+  flex-shrink: 0;
+}

@@ -1,0 +1,40 @@
+<div class="composer">
+  @if (quickPrompts.length && !disabled()) {
+    <div class="composer__prompts">
+      @for (prompt of quickPrompts; track prompt) {
+        <button type="button" class="composer__prompt-chip" (click)="useQuickPrompt(prompt)">
+          {{ prompt }}
+        </button>
+      }
+    </div>
+  }
+
+  <form class="composer__form" (submit)="onSubmit($event)">
+    <textarea
+      #textarea
+      class="composer__textarea"
+      rows="1"
+      placeholder="Ask about a condition, symptom, or treatment…"
+      [(ngModel)]="value"
+      name="message"
+      (input)="autoGrow()"
+      (keydown)="onKeydown($event)"
+    ></textarea>
+
+    @if (streaming()) {
+      <button type="button" class="composer__action composer__action--stop" (click)="stop.emit()">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+          <rect x="3" y="3" width="10" height="10" rx="2" fill="currentColor" />
+        </svg>
+      </button>
+    } @else {
+      <button type="submit" class="composer__action composer__action--send" [disabled]="disabled() || !value.trim()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M2 8h11M8.5 3.5L13 8l-4.5 4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+    }
+  </form>
+
+  <p class="composer__hint">MedAI can be wrong. Verify important guidance with a clinician.</p>
+</div>

@@ -1,0 +1,31 @@
+<div class="shell">
+  <app-sidebar
+    [sessions]="store.allSessions()"
+    [activeSessionId]="store.activeSession()?.id ?? null"
+    [collapsed]="sidebarCollapsed()"
+    (newSession)="onNewSession()"
+    (selectSession)="onSelectSession($event)"
+    (deleteSession)="onDeleteSession($event)"
+  />
+
+  <div class="shell__main">
+    <div class="shell__header-row">
+      <button class="shell__sidebar-toggle" type="button" (click)="toggleSidebar()" aria-label="Toggle consultation history">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </button>
+
+      <app-vitals-header
+        class="shell__vitals"
+        [active]="isStreaming()"
+        [connected]="connected()"
+        [sessionTitle]="activeSessionTitle()"
+      />
+    </div>
+
+    <app-chat-window [messages]="store.activeMessages()" (promptSelected)="onSend($event)" />
+
+    <app-chat-input [disabled]="isStreaming()" [streaming]="isStreaming()" (send)="onSend($event)" (stop)="onStop()" />
+  </div>
+</div>

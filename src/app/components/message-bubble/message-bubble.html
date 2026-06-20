@@ -1,0 +1,39 @@
+<article
+  class="bubble"
+  [class.bubble--user]="message().role === 'user'"
+  [class.bubble--assistant]="message().role === 'assistant'"
+  [class.bubble--error]="message().status === 'error'"
+>
+  <div class="bubble__avatar" aria-hidden="true">
+    @if (message().role === 'assistant') {
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path
+          d="M8 1.5l1.4 3.3 3.3 1.4-3.3 1.4L8 11l-1.4-3.3-3.3-1.4 3.3-1.4L8 1.5z"
+          fill="currentColor"
+        />
+      </svg>
+    } @else {
+      <span>You</span>
+    }
+  </div>
+
+  <div class="bubble__content">
+    @if (message().role === 'assistant') {
+      <div class="bubble__text bubble__text--rich" [innerHTML]="renderedContent()"></div>
+    } @else {
+      <div class="bubble__text">{{ message().content }}</div>
+    }
+
+    @if (message().status === 'streaming' && message().content.length === 0) {
+      <div class="bubble__thinking">
+        <span></span><span></span><span></span>
+      </div>
+    }
+
+    @if (message().status === 'error') {
+      <p class="bubble__error-note">Couldn't reach the agent. Check the backend and try again.</p>
+    }
+
+    <time class="bubble__time">{{ timestamp() }}</time>
+  </div>
+</article>
