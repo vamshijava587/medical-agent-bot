@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiBaseUrl: 'http://localhost:8080',
+ apiBaseUrl: 'https://medical-agent-bot-bff.onrender.com',
   // Model to request from the backend: 'OPENAI' or 'OLLAMA'
-  chatModel: 'OLLAMA' as const,
+  chatModel: 'OPENAI' as const,
 };
