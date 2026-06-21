@@ -88,7 +88,12 @@ export class ChatService {
 
       handlers.onDone();
     } catch (err) {
-      handlers.onError(err instanceof Error ? err.message : 'Stream interrupted.');
+      // If the stream was aborted by the user, treat it as a normal completion.
+      if (err instanceof DOMException && (err as DOMException).name === 'AbortError') {
+        handlers.onDone();
+      } else {
+        handlers.onError(err instanceof Error ? err.message : 'Stream interrupted.');
+      }
     } finally {
       this.activeController = null;
     }

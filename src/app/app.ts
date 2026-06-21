@@ -117,5 +117,16 @@ export class App {
   onStop(): void {
     this.chat.stop();
     this.isStreaming.set(false);
+
+    // If the user manually stopped the stream, mark the active assistant
+    // streaming message as 'done' so it doesn't display as an error.
+    const session = this.store.activeSession();
+    if (!session) return;
+    const streamingMsg = [...session.messages]
+      .reverse()
+      .find((m) => m.role === 'assistant' && m.status === 'streaming');
+    if (streamingMsg) {
+      this.store.setMessageStatus(session.id, streamingMsg.id, 'done');
+    }
   }
 }
